@@ -37,7 +37,7 @@ def signup_view(request):
         user = DonorProfile(name=name, email=email, password=password)
         user.save()
 
-        return redirect('login')  # 🚀 redirect after signup
+        return redirect('login')  
     return render(request, 'hello/signup.html')
 
 def login_view(request):
@@ -47,8 +47,8 @@ def login_view(request):
 
         try:
             user = DonorProfile.objects.get(email=email, password=password)
-            request.session['user_id'] = user.id  # simple login system
-            return redirect('donate')  # 🚀 redirect after login
+            request.session['user_id'] = user.id  
+            return redirect('donate') 
         except DonorProfile.DoesNotExist:
             return render(request, 'hello/login.html', {'error': 'Invalid credentials'})
 
@@ -60,7 +60,7 @@ def donate_view(request):
         form = DonationForm(request.POST)
         if form.is_valid():
             donation = form.save(commit=False)
-            donation.user = request.user  # Store the logged-in user
+            donation.user = request.user 
             donation.save()
             return render(request, 'hello/donation_success.html', {'donation': donation})
     else:
@@ -87,13 +87,13 @@ def register(request):
 def donation_dashboard(request):
     donations = Donation.objects.all().order_by('-date')
     
-    # Total donation amount
+ 
     total_amount = donations.aggregate(Sum('amount'))['amount__sum'] or 0
 
-    # Total number of unique donors (based on name or user)
+   
     donor_count = donations.values('name').distinct().count()
 
-    # Donations made this month
+   
     today = now()
     this_month_donations = donations.filter(date__month=today.month, date__year=today.year)
     this_month_amount = this_month_donations.aggregate(Sum('amount'))['amount__sum'] or 0
@@ -112,7 +112,7 @@ def donation_dashboard(request):
 
 
 def donation_success(request):
-    # Fetch latest donation made by the current user
+   
     latest_donation = Donation.objects.filter(user=request.user).order_by('-date').first()
 
     return render(request, 'hello/donation_success.html', {
