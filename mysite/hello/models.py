@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User  # Keep this for login/signup
-
+from django.contrib.auth.models import User  
 class Donation(models.Model):
     PAYMENT_CHOICES = [
         ('Cash', 'Cash'),
@@ -18,7 +17,6 @@ class Donation(models.Model):
     def __str__(self):
         return f"{self.name} - ₹{self.amount}"
 
-# Rename this model to avoid conflict
 class DonorProfile(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
